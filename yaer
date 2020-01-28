@@ -1,0 +1,26 @@
+local player = game.Players.LocalPlayer
+local function waitForAlive()
+  repeat
+     wait()
+  until
+     player.Character
+     and player.Character:FindFirstChild("Humanoid")
+     and player.Character.Humanoid.Health > 0
+  return player.Character
+end
+game.Workspace.Maps.DescendantAdded:Connect(function(v)
+  if v:IsA("BasePart") and (v.Name == "StartMap" or v.Name == "StartPart" or (v.Name == "Water" and (v.Parent.Name == "EndMap" or v.Parent.Name == "Ocean"))) then
+     waitForAlive():MoveTo(v.Position)
+  elseif v:IsA("BasePart") and (v.Name == "EndPortal") then
+     wait(1)
+     while true do
+        waitForAlive().PrimaryPart.CFrame = v.CFrame
+        wait(80.5)
+     end
+  end
+end)
+for _,v in pairs(workspace.Maps:GetDescendants()) do
+  if v:IsA("BasePart") and (v.Name == "StartMap" or v.Name == "StartPart") then
+     waitForAlive().PrimaryPart.Parent:MoveTo(v.Position)
+  end
+end
